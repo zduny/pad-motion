@@ -2,7 +2,7 @@
 //! 
 //! Includes client and server implementations.
 //! 
-//! Navigate to github reporsitory for [examples](https://github.com/zduny/pad_motion/tree/master/examples) of usage.
+//! Navigate to github repository for [examples](https://github.com/zduny/pad_motion/tree/master/examples) of usage.
 
 pub mod protocol;
 pub mod server;
