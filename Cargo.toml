@@ -1,6 +1,6 @@
 [package]
 name = "pad-motion"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["zduny <dzduniak@gmail.com>"]
 edition = "2018"
 description = "Implementation of Cemuhook gamepad motion protocol. Includes client and server implementations."
