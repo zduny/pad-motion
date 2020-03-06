@@ -30,9 +30,16 @@ const DEFAULT_PORT: u16 = 3333;
 const DEFAULT_SERVER_PORT: u16 = 26760;
 
 pub trait DsClient {
+  /// Starts background client thread.
   fn start(self, countinue_running: Arc<AtomicBool>) -> JoinHandle<()>;
+
+  /// Gets currently cached controller info for given slot number.
   fn get_controller_info(&self, slot_number: u8) -> ControllerInfo;
+
+  /// Gets currently cached controller data for given slot number.
   fn get_controller_data(&self, slot_number: u8) -> ControllerData;
+
+  /// Returns next event in event queue or `None` if empty.
   fn next_event(&self) -> Option<ClientEvent>;
 }
 
@@ -45,6 +52,13 @@ pub struct Client {
 }
 
 impl Client {
+  /// Creates new client.
+  /// 
+  /// # Arguments
+  /// 
+  /// * `id` - client ID, pass `None` to use a random number.
+  /// * `address` - client's UDP socket address, if `None` is passed `127.0.0.1:3333` is used.
+  /// * `server_address` - server's UDP socket address, the default (if `None` is passed) is `127.0.0.1:267601`.
   pub fn new(id: Option<u32>, address: Option<SocketAddr>, server_address: Option<SocketAddr>) -> Result<Client> {
     let mut rng = rand::thread_rng();
 
@@ -105,6 +119,11 @@ impl Client {
     self.socket.send_to(&encoded_message, self.server_address).map(|_amount| ())
   }
 
+  /// Ask server to send controller info for given slot numbers.
+  /// 
+  /// # Arguments
+  /// 
+  /// * `slot_numbers` - slot numbers to ask info for, must contain at most 4 elements.
   pub fn request_connected_controllers_info(&self, slot_numbers: &[u8]) -> Result<()> {
     let slot_numbers = {
       let mut slots = [0; 4];
@@ -132,6 +151,8 @@ impl Client {
     self.encode_and_send(message)
   }
 
+  /// Ask server to send controller data for given slot numbers.
+  /// You must call this method periodically if you want server to send data.
   pub fn request_controller_data(&self, request: ControllerDataRequest) -> Result<()> {
     let payload = MessagePayload::ControllerDataRequest(request);
 

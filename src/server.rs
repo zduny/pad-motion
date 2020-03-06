@@ -26,8 +26,13 @@ struct RequestedControllerData {
 const DEFAULT_PORT: u16 = 26760;
 
 pub trait DsServer {
+  /// Starts background server thread.
   fn start(self, countinue_running: Arc<AtomicBool>) -> JoinHandle<()>;
+
+  /// Update controller info (it will automatically send this data to connected clients).
   fn update_controller_info(&self, controller_info: ControllerInfo);
+
+  /// Update controller data (it will automatically send this data to connected clients).
   fn update_controller_data(&self, slot_number: u8, controller_data: ControllerData);
 }
 
@@ -39,6 +44,12 @@ pub struct Server {
 }
 
 impl Server {
+  /// Creates new server.
+  /// 
+  /// # Arguments
+  /// 
+  /// * `id` - server ID, pass `None` to use a random number.
+  /// * `address` - server's UDP socket address, if `None` is passed `127.0.0.1:3333` is used.
   pub fn new(id: Option<u32>, address: Option<SocketAddr>) -> Result<Server> {
     let mut rng = rand::thread_rng();
 
