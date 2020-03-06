@@ -5,6 +5,7 @@ authors = ["zduny <dzduniak@gmail.com>"]
 edition = "2018"
 description = "Implementation of Cemuhook gamepad motion protocol. Includes client and server implementations."
 license = "Apache-2.0"
+repository = "https://github.com/zduny/pad_motion"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
