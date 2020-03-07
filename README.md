@@ -10,3 +10,10 @@ You can download compiled example using first connected gamepad and mouse (used 
 
 ## references
 [cemuhook-protocol](https://github.com/v1993/cemuhook-protocol)
+
+## see also
+[Cemuhook](https://cemuhook.sshnuke.net/)
+
+[Cemuhook UDP Pad motion data provider setup](https://cemuhook.sshnuke.net/padudpserver.html)
+
+[Cemu Emulator](https://cemu.info/)
