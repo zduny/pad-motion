@@ -9,4 +9,4 @@ You can download compiled example using first connected gamepad and mouse (used 
 [gamepad-and-mouse-server.zip](https://github.com/zduny/pad_motion/releases/download/v0.1.0/gamepad-and-mouse-server.zip)
 
 ## references
-[cemuhook-protool](https://github.com/v1993/cemuhook-protocol)
+[cemuhook-protocol](https://github.com/v1993/cemuhook-protocol)
