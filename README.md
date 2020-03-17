@@ -3,6 +3,8 @@ Implementation of Cemuhook gamepad motion protocol.
 
 Includes client and server.
 
+https://crates.io/crates/pad-motion
+
 ## gamepad and mouse server example
 You can download compiled example using first connected gamepad and mouse (used to emulate gyroscope data) as an input source, here:
 
