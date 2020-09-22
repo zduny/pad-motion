@@ -51,17 +51,12 @@ fn main() {
     let mut delta_mouse_wheel = 0.0;
     while let Some(event) = mouse_manager.get_event() {
       match event {
-        RawEvent::MouseMoveEvent(mouse_id, delta_x, delta_y) => {
-          if mouse_id == 0 {
-            delta_rotation_x += delta_x as f32;
-            delta_rotation_y += delta_y as f32;
-          }
+        RawEvent::MouseMoveEvent(_mouse_id, delta_x, delta_y) => {
+          delta_rotation_x += delta_x as f32;
+          delta_rotation_y += delta_y as f32;
         },
-        RawEvent::MouseWheelEvent(mouse_id, delta) => {
-          if mouse_id == 0 {
-            delta_mouse_wheel += delta as f32;
-            
-          }
+        RawEvent::MouseWheelEvent(_mouse_id, delta) => {
+          delta_mouse_wheel += delta as f32;          
         }
         _ => ()
       }
