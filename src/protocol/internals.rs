@@ -202,7 +202,7 @@ pub fn parse_touch_data(reader: &mut Cursor<&[u8]>) -> Result<TouchData> {
 
     match active {
       0 => Ok(false),
-      1 => Ok(true),
+      1 | 255 => Ok(true),
       _ => Err(invalid_data_error("Invalid touch active value"))
     }
   }?;
