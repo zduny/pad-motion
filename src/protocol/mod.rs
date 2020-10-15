@@ -117,10 +117,10 @@ pub struct ControllerInfo {
 
 #[derive(Copy, Clone, Debug, Default, PartialEq)]
 pub struct TouchData {
-  active: bool,
-  id: u8,
-  position_x: u16,
-  position_y: u16
+  pub active: bool,
+  pub id: u8,
+  pub position_x: u16,
+  pub position_y: u16
 }
 
 #[derive(Copy, Clone, Debug, Default, PartialEq)]
