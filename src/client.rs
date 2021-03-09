@@ -34,10 +34,10 @@ pub trait DsClient {
   fn start(self, countinue_running: Arc<AtomicBool>) -> JoinHandle<()>;
 
   /// Gets currently cached controller info for given slot number.
-  fn get_controller_info(&self, slot_number: u8) -> ControllerInfo;
+  fn controller_info(&self, slot_number: u8) -> ControllerInfo;
 
   /// Gets currently cached controller data for given slot number.
-  fn get_controller_data(&self, slot_number: u8) -> ControllerData;
+  fn controller_data(&self, slot_number: u8) -> ControllerData;
 
   /// Returns next event in event queue or `None` if empty.
   fn next_event(&self) -> Option<ClientEvent>;
@@ -244,7 +244,7 @@ impl DsClient for Arc<Client> {
     })
   }
 
-  fn get_controller_info(&self, slot_number: u8) -> ControllerInfo {
+  fn controller_info(&self, slot_number: u8) -> ControllerInfo {
     assert!(slot_number < 4);
 
     let slot = self.slots.lock().unwrap()[slot_number as usize];
@@ -252,7 +252,7 @@ impl DsClient for Arc<Client> {
     slot.controller_info
   }
 
-  fn get_controller_data(&self, slot_number: u8) -> ControllerData {
+  fn controller_data(&self, slot_number: u8) -> ControllerData {
     assert!(slot_number < 4);
 
     let slot = self.slots.lock().unwrap()[slot_number as usize];
@@ -261,6 +261,6 @@ impl DsClient for Arc<Client> {
   }
 
   fn next_event(&self) -> Option<ClientEvent> {
-    self.events.pop().ok()
+    self.events.pop()
   }
 }
