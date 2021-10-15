@@ -49,7 +49,7 @@ impl Server {
   /// # Arguments
   /// 
   /// * `id` - server ID, pass `None` to use a random number.
-  /// * `address` - server's UDP socket address, if `None` is passed `127.0.0.1:3333` is used.
+  /// * `address` - server's UDP socket address, if `None` is passed `127.0.0.1:26760` is used.
   pub fn new(id: Option<u32>, address: Option<SocketAddr>) -> Result<Server> {
     let mut rng = rand::thread_rng();
 

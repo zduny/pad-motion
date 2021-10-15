@@ -1,5 +1,6 @@
 pub mod internals;
 
+use crc32fast::Hasher;
 use internals::*;
 use std::io::{Cursor, Result, Error, ErrorKind};
 use byteorder::{WriteBytesExt, LittleEndian};
@@ -184,7 +185,9 @@ fn compute_checksum(packet: &[u8]) -> u32 {
       *byte = 0;
   }
 
-  crc::crc32::checksum_ieee(&packet)
+  let mut hasher = Hasher::new();
+  hasher.update(&packet);
+  hasher.finalize()
 }
 
 pub fn encode_message(writer: &mut Vec<u8>, message: Message) -> Result<()> {

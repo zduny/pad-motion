@@ -1,6 +1,6 @@
 [package]
 name = "pad-motion"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["zduny <dzduniak@gmail.com>"]
 edition = "2018"
 description = "Implementation of Cemuhook gamepad motion protocol. Includes client and server implementations."
@@ -16,7 +16,7 @@ name = "pad_motion"
 
 [dependencies]
 byteorder = "1.4.2"
-crc = "1.8.1"
+crc32fast = "1.2.1"
 rand = "0.8.3"
 crossbeam-queue = "0.3.1"
 
