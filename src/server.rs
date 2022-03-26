@@ -7,7 +7,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::sync::Mutex;
 use std::thread::JoinHandle;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use crate::protocol::*;
 
@@ -35,7 +35,7 @@ pub trait DsServer {
     /// Update controller data (it will automatically send this data to connected clients).
     fn update_controller_data(&self, slot_number: u8, controller_data: ControllerData);
 
-    fn get_connected_clients(&self) -> u8;
+    fn last_request_duration(&self) -> Duration;
 }
 
 pub struct Server {
@@ -43,6 +43,7 @@ pub struct Server {
     slots: Mutex<[Slot; 4]>,
     connected_clients: Mutex<HashMap<SocketAddr, RequestedControllerData>>,
     socket: UdpSocket,
+    last_request: Mutex<Instant>,
 }
 
 impl Server {
@@ -52,6 +53,7 @@ impl Server {
     ///
     /// * `id` - server ID, pass `None` to use a random number.
     /// * `address` - server's UDP socket address, if `None` is passed `127.0.0.1:26760` is used.
+
     pub fn new(id: Option<u32>, address: Option<SocketAddr>) -> Result<Server> {
         let mut rng = rand::thread_rng();
 
@@ -94,6 +96,7 @@ impl Server {
             slots,
             connected_clients,
             socket,
+            last_request: Mutex::new(Instant::now()),
         })
     }
 
@@ -224,7 +227,7 @@ impl Server {
                     }
                     MessagePayload::ControllerDataRequest(request) => {
                         {
-                            println!("Request here");
+                            *self.last_request.lock().unwrap() = Instant::now();
                             let mut connected_clients = self.connected_clients.lock().unwrap();
                             let requested = connected_clients.entry(source).or_insert(
                                 RequestedControllerData {
@@ -300,8 +303,7 @@ impl DsServer for Arc<Server> {
         let _ = self.send_controller_data();
     }
 
-    fn get_connected_clients(&self) -> u8 {
-        let connected_clients = self.connected_clients.lock().unwrap();
-        connected_clients.len() as u8
+    fn last_request_duration(&self) -> Duration {
+        *self.last_request.lock().unwrap().elapsed()
     }
 }
