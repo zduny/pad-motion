@@ -224,6 +224,7 @@ impl Server {
                     }
                     MessagePayload::ControllerDataRequest(request) => {
                         {
+                            println!("Request here");
                             let mut connected_clients = self.connected_clients.lock().unwrap();
                             let requested = connected_clients.entry(source).or_insert(
                                 RequestedControllerData {
