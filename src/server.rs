@@ -34,6 +34,8 @@ pub trait DsServer {
 
     /// Update controller data (it will automatically send this data to connected clients).
     fn update_controller_data(&self, slot_number: u8, controller_data: ControllerData);
+
+    fn get_connected_clients(&self) -> u8;
 }
 
 pub struct Server {
@@ -295,5 +297,9 @@ impl DsServer for Arc<Server> {
         }
 
         let _ = self.send_controller_data();
+    }
+
+    fn get_connected_clients(&self) -> u8 {
+        4
     }
 }
