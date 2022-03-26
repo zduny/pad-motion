@@ -300,6 +300,7 @@ impl DsServer for Arc<Server> {
     }
 
     fn get_connected_clients(&self) -> u8 {
-        4
+        let connected_clients = self.connected_clients.lock().unwrap();
+        connected_clients.len() as u8
     }
 }
