@@ -304,6 +304,6 @@ impl DsServer for Arc<Server> {
     }
 
     fn last_request_duration(&self) -> Duration {
-        *self.last_request.lock().unwrap().elapsed()
+        {*self.last_request.lock().unwrap()}.elapsed()
     }
 }
