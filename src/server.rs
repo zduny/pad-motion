@@ -6,7 +6,7 @@ use std::net::UdpSocket;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::sync::Mutex;
-use std::thread::JoinHandle;
+use std::thread::{JoinHandle, Thread};
 use std::time::{Duration, Instant};
 
 use crate::protocol::*;
@@ -27,7 +27,7 @@ const DEFAULT_PORT: u16 = 26760;
 
 pub trait DsServer {
     /// Starts background server thread.
-    fn start(self, countinue_running: Arc<AtomicBool>, receiving_requests: Arc<AtomicBool>) -> JoinHandle<()>;
+    fn start(self, countinue_running: Arc<AtomicBool>, receiving_requests: Arc<AtomicBool>, parent: Thread) -> JoinHandle<()>;
 
     /// Update controller info (it will automatically send this data to connected clients).
     fn update_controller_info(&self, controller_info: ControllerInfo);
@@ -263,7 +263,7 @@ impl Server {
 }
 
 impl DsServer for Arc<Server> {
-    fn start(self, countinue_running: Arc<AtomicBool>, receiving_requests: Arc<AtomicBool> ) -> JoinHandle<()> {
+    fn start(self, countinue_running: Arc<AtomicBool>, receiving_requests: Arc<AtomicBool>, parent: Thread) -> JoinHandle<()> {
         std::thread::spawn(move || {
             let mut buf = [0_u8; 100];
             while countinue_running.load(Ordering::SeqCst) {
@@ -271,7 +271,10 @@ impl DsServer for Arc<Server> {
                 if let Ok((amount, source)) = self.socket.recv_from(&mut buf) {
                     let message = parse_message(MessageSource::Client, &buf[..amount], true);
                     if let Ok(message) = message {
-                        if !receiving_requests.load(Ordering::SeqCst) {receiving_requests.store(true, Ordering::SeqCst)};
+                        if !receiving_requests.load(Ordering::SeqCst) {
+                            receiving_requests.store(true, Ordering::SeqCst);
+                            parent.unpark();
+                        };
                         let _ = self.handle_request(source, message);
                     }
                 }
