@@ -267,7 +267,6 @@ impl DsServer for Arc<Server> {
         std::thread::spawn(move || {
             let mut buf = [0_u8; 100];
             while countinue_running.load(Ordering::SeqCst) {
-                println!("{}", receiving_requests.load(Ordering::SeqCst));
                 if let Ok((amount, source)) = self.socket.recv_from(&mut buf) {
                     let message = parse_message(MessageSource::Client, &buf[..amount], true);
                     if let Ok(message) = message {
