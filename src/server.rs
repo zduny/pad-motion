@@ -27,7 +27,7 @@ const DEFAULT_PORT: u16 = 26760;
 
 pub trait DsServer {
     /// Starts background server thread.
-    fn start(self, countinue_running: Arc<AtomicBool>) -> JoinHandle<()>;
+    fn start(self, countinue_running: Arc<AtomicBool>, receiving_requests: Arc<AtomicBool>) -> JoinHandle<()>;
 
     /// Update controller info (it will automatically send this data to connected clients).
     fn update_controller_info(&self, controller_info: ControllerInfo);
@@ -263,13 +263,14 @@ impl Server {
 }
 
 impl DsServer for Arc<Server> {
-    fn start(self, countinue_running: Arc<AtomicBool>) -> JoinHandle<()> {
+    fn start(self, countinue_running: Arc<AtomicBool>, receiving_requests: Arc<AtomicBool> ) -> JoinHandle<()> {
         std::thread::spawn(move || {
             let mut buf = [0_u8; 100];
             while countinue_running.load(Ordering::SeqCst) {
                 if let Ok((amount, source)) = self.socket.recv_from(&mut buf) {
                     let message = parse_message(MessageSource::Client, &buf[..amount], true);
                     if let Ok(message) = message {
+                        if !receiving_requests.load(Ordering::Acquire) {receiving_requests.store(true, Ordering::Release)};
                         let _ = self.handle_request(source, message);
                     }
                 }
