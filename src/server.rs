@@ -270,7 +270,7 @@ impl DsServer for Arc<Server> {
                 if let Ok((amount, source)) = self.socket.recv_from(&mut buf) {
                     let message = parse_message(MessageSource::Client, &buf[..amount], true);
                     if let Ok(message) = message {
-                        if !receiving_requests.load(Ordering::Acquire) {receiving_requests.store(true, Ordering::Release)};
+                        receiving_requests.store(true, Ordering::Release);
                         let _ = self.handle_request(source, message);
                     }
                 }
