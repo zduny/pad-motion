@@ -12,6 +12,10 @@ You can download compiled example using first connected gamepad and mouse (used 
 
 If you need more help on how to run this example (and test if it's working), see [issue](https://github.com/zduny/pad-motion/issues/2).
 
+## projects using this crate
+
+[joycon-cemuhook](https://github.com/pickfire/joycon-cemuhook) by [pickfire](https://github.com/pickfire)
+
 ## references
 [cemuhook-protocol](https://github.com/v1993/cemuhook-protocol)
 
