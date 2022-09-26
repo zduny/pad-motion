@@ -3,6 +3,8 @@ Implementation of Cemuhook gamepad motion protocol.
 
 Includes client and server.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/O5O31JYZ4)
+
 https://crates.io/crates/pad-motion
 
 ## gamepad and mouse server example
