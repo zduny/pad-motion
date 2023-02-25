@@ -2,13 +2,37 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
+use clap::Parser;
 use gilrs::{Axis, Button, Gilrs};
 use multiinput::{RawEvent, RawInputManager};
 
 use pad_motion::protocol::*;
 use pad_motion::server::*;
 
+/// Gamepad and mouse info server.
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    /// Invert mouse X-axis.
+    #[arg(long)]
+    invert_x: bool,
+
+    /// Invert mouse Y-axis.
+    #[arg(long)]
+    invert_y: bool,
+
+    /// Invert gamepad X-axis.
+    #[arg(long)]
+    invert_gamepad_x: bool,
+
+    /// Invert gamepad Y-axis.
+    #[arg(long)]
+    invert_gamepad_y: bool,
+}
+
 fn main() {
+    let args = Args::parse();
+
     let running = Arc::new(AtomicBool::new(true));
 
     {
@@ -36,6 +60,19 @@ fn main() {
     fn to_stick_value(input: f32) -> u8 {
         (input * 127.0 + 127.0) as u8
     }
+
+    fn inverter(invert: bool) -> f32 {
+        if invert {
+            -1.0
+        } else {
+            1.0
+        }
+    }
+
+    let inverter_x = inverter(args.invert_x);
+    let inverter_y = inverter(args.invert_y);
+    let gamepad_inverter_x = inverter(args.invert_gamepad_x);
+    let gamepad_inverter_y = inverter(args.invert_gamepad_y);
 
     let mut gilrs = Gilrs::new().unwrap();
     let mut mouse_manager = RawInputManager::new().unwrap();
@@ -91,8 +128,12 @@ fn main() {
                     r2: gamepad.is_pressed(Button::RightTrigger2),
                     l2: gamepad.is_pressed(Button::LeftTrigger2),
                     ps: analog_button_value(Button::Mode),
-                    left_stick_x: to_stick_value(gamepad.value(Axis::LeftStickX)),
-                    left_stick_y: to_stick_value(gamepad.value(Axis::LeftStickY)),
+                    left_stick_x: to_stick_value(
+                        gamepad.value(Axis::LeftStickX) * gamepad_inverter_x,
+                    ),
+                    left_stick_y: to_stick_value(
+                        gamepad.value(Axis::LeftStickY) * gamepad_inverter_y,
+                    ),
                     right_stick_x: to_stick_value(gamepad.value(Axis::RightStickX)),
                     right_stick_y: to_stick_value(gamepad.value(Axis::RightStickY)),
                     analog_d_pad_left: analog_button_value(Button::DPadLeft),
@@ -108,8 +149,8 @@ fn main() {
                     analog_r2: analog_button_value(Button::RightTrigger2),
                     analog_l2: analog_button_value(Button::LeftTrigger2),
                     motion_data_timestamp: now.elapsed().as_micros() as u64,
-                    gyroscope_pitch: -delta_rotation_y * 10.0,
-                    gyroscope_roll: delta_rotation_x * 10.0,
+                    gyroscope_pitch: -delta_rotation_y * 10.0 * inverter_y,
+                    gyroscope_roll: delta_rotation_x * 10.0 * inverter_x,
                     gyroscope_yaw: delta_mouse_wheel * 300.0,
                     ..Default::default()
                 }
@@ -117,8 +158,8 @@ fn main() {
                 ControllerData {
                     connected: true,
                     motion_data_timestamp: now.elapsed().as_micros() as u64,
-                    gyroscope_pitch: -delta_rotation_y * 10.0,
-                    gyroscope_roll: delta_rotation_x * 10.0,
+                    gyroscope_pitch: -delta_rotation_y * 10.0 * inverter_y,
+                    gyroscope_roll: delta_rotation_x * 10.0 * inverter_x,
                     gyroscope_yaw: delta_mouse_wheel * 300.0,
                     ..Default::default()
                 }

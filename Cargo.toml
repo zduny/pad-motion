@@ -9,8 +9,6 @@ repository = "https://github.com/zduny/pad_motion"
 documentation = "https://docs.rs/pad-motion/"
 keywords = ["cemu", "cemuhook", "protocol", "gyroscope", "motion"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [lib]
 name = "pad_motion"
 
@@ -21,6 +19,7 @@ rand = "0.8.3"
 crossbeam-queue = "0.3.1"
 
 [dev-dependencies]
+clap = { version = "4.1.6", features = ["derive"] }
 ctrlc = "3.1.8"
-gilrs = "0.8.0"
+gilrs = "0.10.1"
 multiinput = "0.1.0"
