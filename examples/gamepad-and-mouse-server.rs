@@ -21,13 +21,21 @@ struct Args {
     #[arg(long)]
     invert_y: bool,
 
-    /// Invert gamepad X-axis.
+    /// Invert gamepad left stick X-axis.
     #[arg(long)]
     invert_gamepad_x: bool,
 
-    /// Invert gamepad Y-axis.
+    /// Invert gamepad left stick Y-axis.
     #[arg(long)]
     invert_gamepad_y: bool,
+
+    /// Invert gamepad right stick X-axis.
+    #[arg(long)]
+    invert_gamepad_right_x: bool,
+
+    /// Invert gamepad right stick Y-axis.
+    #[arg(long)]
+    invert_gamepad_right_y: bool,
 }
 
 fn main() {
@@ -73,6 +81,8 @@ fn main() {
     let inverter_y = inverter(args.invert_y);
     let gamepad_inverter_x = inverter(args.invert_gamepad_x);
     let gamepad_inverter_y = inverter(args.invert_gamepad_y);
+    let gamepad_inverter_right_x = inverter(args.invert_gamepad_right_x);
+    let gamepad_inverter_right_y = inverter(args.invert_gamepad_right_y);
 
     let mut gilrs = Gilrs::new().unwrap();
     let mut mouse_manager = RawInputManager::new().unwrap();
@@ -134,8 +144,12 @@ fn main() {
                     left_stick_y: to_stick_value(
                         gamepad.value(Axis::LeftStickY) * gamepad_inverter_y,
                     ),
-                    right_stick_x: to_stick_value(gamepad.value(Axis::RightStickX)),
-                    right_stick_y: to_stick_value(gamepad.value(Axis::RightStickY)),
+                    right_stick_x: to_stick_value(
+                        gamepad.value(Axis::RightStickX) * gamepad_inverter_right_x,
+                    ),
+                    right_stick_y: to_stick_value(
+                        gamepad.value(Axis::RightStickY) * gamepad_inverter_right_y,
+                    ),
                     analog_d_pad_left: analog_button_value(Button::DPadLeft),
                     analog_d_pad_down: analog_button_value(Button::DPadDown),
                     analog_d_pad_right: analog_button_value(Button::DPadRight),
