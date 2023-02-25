@@ -10,7 +10,7 @@ https://crates.io/crates/pad-motion
 ## gamepad and mouse server example
 You can download compiled example using first connected gamepad and mouse (used to emulate gyroscope data) as an input source, here:
 
-[gamepad-and-mouse-server.zip](https://github.com/zduny/pad_motion/releases/download/v0.1.1/gamepad-and-mouse-server.zip)
+[gamepad-and-mouse-server.zip](https://github.com/zduny/pad-motion/releases/download/v0.1.2/gamepad-and-mouse-server.zip)
 
 If you need more help on how to run this example (and test if it's working), see [issue](https://github.com/zduny/pad-motion/issues/2).
 
