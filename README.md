@@ -1,4 +1,9 @@
 # pad-motion
+
+[![Test Status](https://github.com/zduny/pad-motion/actions/workflows/rust.yml/badge.svg)](https://github.com/zduny/pad-motion/actions)
+[![Crate](https://img.shields.io/crates/v/pad-motion.svg)](https://crates.io/crates/pad-motion)
+[![API](https://docs.rs/pad-motion/badge.svg)](https://docs.rs/pad-motion)
+
 Implementation of Cemuhook gamepad motion protocol. 
 
 Includes client and server.
